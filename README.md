@@ -12,7 +12,12 @@ This repository contains all the essential and required configurations to setup 
 
 ## Deployment
 
+Create the Network:
+Run the following command to create the Docker network named thehive_network:
 
+```bash
+docker network create thehive_network
+```
 
 ```bash
   IN PROGRESS
