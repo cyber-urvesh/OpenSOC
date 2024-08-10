@@ -1,0 +1,23 @@
+version: '3.7'
+
+networks:
+  thehive_network:
+    external: true
+
+services:
+  cortex:
+    image: thehiveproject/cortex:latest
+    container_name: cortex
+    networks:
+      - thehive_network
+    ports:
+      - "9001:9001"
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+      - CONFIG_FILE=/etc/cortex/application.conf
+    volumes:
+      - cortex-data:/opt/cortex_data
+      - ./application.conf:/etc/cortex/application.conf
+
+volumes:
+  cortex-data:
