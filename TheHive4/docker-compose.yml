@@ -1,0 +1,44 @@
+version: '3.7'
+
+networks:
+  thehive_network:
+    external: true
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: thehive-elasticsearch
+    networks:
+      - thehive_network
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  thehive:
+    image: thehiveproject/thehive4:latest
+    container_name: thehive
+    depends_on:
+      - elasticsearch
+    networks:
+      - thehive_network
+    ports:
+      - "9000:9000"
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+      - CONFIG_FILE=/etc/thehive/application.conf
+    volumes:
+      - thehive-data:/opt/thp_data
+      - ./application.conf:/etc/thehive/application.conf
+
+volumes:
+  esdata:
+  thehive-data:
